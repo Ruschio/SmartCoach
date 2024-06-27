@@ -1,0 +1,19 @@
+{
+  "name": "smartcoach",
+  "version": "0.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start:webapp": "cd webapp && npm run dev",
+    "start:backend": "cd backend && npm run start",
+    "start": "concurrently \"npm run start:webapp\" \"npm run start:backend\"",
+    "install:both": "cd backend && npm install && cd ../webapp && npm install",
+    "build:webapp": "cd webapp && npm run build",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Luca Ruschioni",
+  "license": "ISC",
+  "dependencies": {
+    "concurrently": "^8.2.2"
+  }
+}

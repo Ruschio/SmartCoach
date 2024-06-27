@@ -1,0 +1,72 @@
+@import './base.css';
+@import '../../node_modules/bootstrap/dist/css/bootstrap.min.css';
+@import '../../node_modules/bootstrap-icons/font/bootstrap-icons.css';
+
+#app {
+  width: 100%;
+  max-width: 1440px;
+  margin: 0 auto;
+  padding: 0 1rem;
+  font-weight: normal;
+}
+
+a,
+.green {
+  text-decoration: none;
+  color: var(--color-primary);
+  transition: 0.4s;
+}
+
+.btn-primary {
+  background-color: var(--color-primary);
+  border: 1px solid var(--color-primary);
+}
+
+.btn-primary:hover,
+.btn-primary:focus,
+.btn.btn-primary:active,
+.btn-primary:disabled,
+.btn-primary.show {
+  background-color: var(--color-primary-dark);
+  border: 1px solid var(--color-primary-dark);
+}
+
+input:focus,
+.form-control:focus {
+  outline: 0;
+  box-shadow: 0 0 0 0.25rem var(--color-primary-shadow);
+}
+
+@media (hover: hover) {
+  a:hover {
+    background-color: var(--color-primary-shadow);
+  }
+}
+
+@media (min-width: 992px) {
+  body {
+    display: flex;
+  }
+}
+
+@media (max-width: 1440px) {
+  #app {
+    padding: 0 5%;
+  }
+}
+
+/* Toastify */
+
+.Toastify__toast-body {
+  max-width: 100%;
+}
+
+.Toastify__toast-body > div:last-child {
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.Toastify__close-button {
+  right: 8px;
+  position: absolute;
+}
