@@ -51,7 +51,7 @@ To install and set up the SmartCoach project, follow these steps:
    npm run install:all
    ```
 
-3. Following the SmartBugs installation guide to install SmartBugs tool.
+3. Follow the SmartBugs installation guide to prepare your environment with the required dependencies -> [SmartBugs guide](https://github.com/smartbugs/smartbugs?tab=readme-ov-file#installation).
 
 ## Usage
 
@@ -60,9 +60,9 @@ To install and set up the SmartCoach project, follow these steps:
    npm run start
    ```
    
-2. Then go to localhost:5173 
+2. Then go to [localhost:5173](localhost:5173)
 
-## Licence
+## License
 
 This project is licensed under the MIT License.
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
