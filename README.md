@@ -51,7 +51,7 @@ To install and set up the SmartCoach project, follow these steps:
    npm run install:all
    ```
 
-3. Follow the SmartBugs installation guide to prepare your environment with the required dependencies -> [SmartBugs guide](https://github.com/smartbugs/smartbugs?tab=readme-ov-file#installation).
+3. Follow the [SmartBugs installation guide](https://github.com/smartbugs/smartbugs?tab=readme-ov-file#installation) to prepare your environment with the required dependencies
 
 ## Usage
 
