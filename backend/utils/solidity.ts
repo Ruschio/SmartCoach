@@ -52,7 +52,6 @@ function detectVersion(contractSource: string, availableVersions: string[]): str
     contractSource = removeComments(contractSource)
     
     // Find all pragma solidity version occurences (=x.x.x, <x.x.x, <=x.x.x, >x.x.x, >=x.x.x, ^x.x.x, >x.x.x <y.y.y)
-    
     const firstRegex = /pragma\s+solidity\s+([<>]?=?|\^|~)\s*(\d+\.\d+\.\d+)/g
     const secondRegex = /pragma\s+solidity\s+[[>]=?]*\s*\d+\.\d+\.\d+\s+([<]=?)\s*(\d+\.\d+\.\d+)/g
     const matches = [...contractSource.matchAll(firstRegex), ...contractSource.matchAll(secondRegex)]
