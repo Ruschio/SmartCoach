@@ -12,7 +12,7 @@ router.post('/', async (req: {body: IAnalysisRequest}, res: any) => {
     const logsDir = `analysis/logs/${timestamp.toString()}.log` // Path of logs' directory
     const contractId = req.body.contractId // Contract identifier
     const contractPath = `${resultsDir}/${contractId}.sol` // Contract sol file name
-    const contractCode = req.body.code.replace(/"/g, '\\"') // Add backslash before double quotes
+    const contractCode = req.body.code.replace(/"/g, '\\"').replace(/`/g, '\\`') // Replace special characters
     const analysisTools = req.body.tools // List of selected tools
 
     // Create solidity file with contract code

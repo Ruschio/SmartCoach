@@ -1,4 +1,4 @@
-import { getAllVersions, detectVersion, getRemoteVersion } from "../utils/solidity"
+import { getAllVersions, detectVersion, getRemoteVersion, compareVersions, parseVersion } from "../utils/solidity"
 import { ICompileRequest, ICompileResults } from "../models/Compile"
 import { SolidityVersions } from "../models/SolidityVersions"
 
@@ -27,8 +27,8 @@ router.post('/', async (req: {body: ICompileRequest}, res: any) => {
     const solcV = await getRemoteVersion(solRelease).then(v => v).catch(err => null)
     if (!solcV) return res.status(500).send('Cannot retrieve solidity release from remote')
 
-    // Input for solc compilation
-    const input = JSON.stringify({
+    // Input option for solc compilation
+    const options: {[k: string]: any} = {
         language: 'Solidity',
         sources: {
             [contract]: {
@@ -36,18 +36,24 @@ router.post('/', async (req: {body: ICompileRequest}, res: any) => {
             }
         },
         settings: {
-            viaIR: true,
             outputSelection: {
                 '*': {
                     '*': ['*']
                 }
             }
         }
-    })
+    }
+    // Compile viaIR was introduced in solidity version 0.7.0
+    if (compareVersions(parseVersion(solVersion), parseVersion('0.7.5')) >= 0) options.settings.viaIR = true
+    const input = JSON.stringify(options)
+
     // Compile contract with correct solc version
-    console.log(`Starting contract compilation`)
+    console.log(`Starting contract compilation with Solidity version ${solVersion}`)
     const compiledContract = JSON.parse(solcV.compile(input))
-    if (!compiledContract.contracts) return res.status(500).send('Error while compiling the contract')
+    if (!compiledContract.contracts) {
+        console.error('Error while compiling the contract', compiledContract)
+        return res.status(500).send('Error while compiling the contract')
+    }
     const contractName = Object.keys(compiledContract.contracts[contract])[0]
     const results = compiledContract.contracts[contract][contractName]
     const abi = results.abi
