@@ -7,7 +7,7 @@
     "start:webapp": "cd webapp && npm run dev",
     "start:backend": "cd backend && npm run start",
     "start": "concurrently \"npm run start:webapp\" \"npm run start:backend\"",
-    "install:all": "npm install && cd backend && npm install && cd ../webapp && npm install && cd ../hardhat && npm install",
+    "install:all": "npm install && cd backend && npm install && cd ../webapp && npm install && cd ../hardhat && npm install && cd ../smartbugs && node install.js",
     "build:webapp": "cd webapp && npm run build",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
