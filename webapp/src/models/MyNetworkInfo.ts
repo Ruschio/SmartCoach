@@ -3,4 +3,5 @@ export interface IMyNetworkInfo {
   desc: string
   chainId: number
   baseUrl: string
+  apiKey?: string
 }

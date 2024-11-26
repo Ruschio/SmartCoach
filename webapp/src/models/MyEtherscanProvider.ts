@@ -14,7 +14,13 @@ import { MyContract } from './MyContract'
 export const supportedNetworks: Map<string, IMyNetworkInfo> = new Map([
   [
     'mainnet',
-    { name: 'mainnet', desc: 'Ethereum', chainId: 1, baseUrl: 'https://api.etherscan.io' }
+    { 
+      name: 'mainnet',
+      desc: 'Ethereum',
+      chainId: 1,
+      baseUrl: 'https://api.etherscan.io',
+      apiKey: 'NNU1E8B594DZJCIJG6RAVNM4WBGZYMYKNW'
+    }
   ],
   [
     'goerli',
@@ -31,7 +37,8 @@ export const supportedNetworks: Map<string, IMyNetworkInfo> = new Map([
       name: 'sepolia',
       desc: 'Sepolia Testnet',
       chainId: 11155111,
-      baseUrl: 'https://api-sepolia.etherscan.io'
+      baseUrl: 'https://api-sepolia.etherscan.io',
+      apiKey: 'NNU1E8B594DZJCIJG6RAVNM4WBGZYMYKNW'
     }
   ],
   [
@@ -40,7 +47,8 @@ export const supportedNetworks: Map<string, IMyNetworkInfo> = new Map([
       name: 'holesky',
       desc: 'Holesky Testnet',
       chainId: 17000,
-      baseUrl: 'https://api-holesky.etherscan.io'
+      baseUrl: 'https://api-holesky.etherscan.io',
+      apiKey: 'NNU1E8B594DZJCIJG6RAVNM4WBGZYMYKNW'
     }
   ],
   [
@@ -304,7 +312,11 @@ export class MyEtherscanProvider extends EtherscanProvider {
   static readonly supportedNetworks = supportedNetworks
 
   constructor(networkish?: Networkish, apiKey?: string) {
-    if (typeof networkish === 'string') networkish = supportedNetworks.get(networkish)
+    if (typeof networkish === 'string') {
+      const network = MyEtherscanProvider.supportedNetworks.get(networkish)
+      networkish = network
+      apiKey = apiKey || network?.apiKey
+    }
     super(networkish, apiKey)
   }
 
