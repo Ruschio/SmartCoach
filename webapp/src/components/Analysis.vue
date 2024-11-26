@@ -28,13 +28,16 @@ const tools = ref<Array<string>>([
 ])
 const selectedTools = ref<Array<string>>([])
 const allSelected = computed(() => tools.value.length == selectedTools.value.length)
+const analysisLoading = ref(false)
 
 // Methods
 const selectAll = (select: boolean) => (selectedTools.value = select ? tools.value : [])
 const analyze = async () => {
   const code = props.contract?.code
   if (!code) return toast.error('No code to analyze')
+  analysisLoading.value = true
   const analysis = await analyzeContract(props.contract.getId(), code, selectedTools.value)
+  analysisLoading.value = false
   if (analysis) return addAnalysis(analysis)
 }
 </script>
@@ -58,8 +61,9 @@ const analyze = async () => {
       </label>
     </div>
     <div class="col-12">
-      <button class="btn btn-primary" @click="analyze" :disabled="selectedTools.length == 0">
-        {{ selectedTools.length != 0 ? 'Start analysis' : 'Select at least one tool' }}
+      <button class="btn btn-primary" @click="analyze" :disabled="selectedTools.length == 0 || analysisLoading">
+        <span v-if="analysisLoading" class="spinner-border spinner-border-sm me-1" aria-hidden="true"></span>
+        {{ analysisLoading ? 'Analyzing contract' : (selectedTools.length != 0 ? 'Start analysis' : 'Select tool(s)') }}
       </button>
     </div>
     <div id="analysisList" class="col-12 mt-5 accordion">
@@ -97,8 +101,10 @@ const analyze = async () => {
             <div v-for="(result, toolName) in analysis.results">
               <h5>{{ toolName }}</h5>
               <div v-for="finding in result.findings" class="my-1">
-                {{ finding.line }}
-                {{ finding.line_end ? ' - ' + finding.line_end : '' }}
+                <span class="lines">
+                  {{ finding.line }}
+                  {{ finding.line_end ? ' - ' + finding.line_end : '' }}
+                </span>
                 {{ finding.message }}
               </div>
             </div>
@@ -155,5 +161,12 @@ const analyze = async () => {
   padding: 1rem 2rem;
   border: none;
   background-color: var(--color-background-mute);
+}
+
+.analysis .lines {
+  font-size: 0.8rem;
+  padding: 0.25rem 0.5rem;
+  border-radius: 0.5rem;
+  background-color: var(--color-background);
 }
 </style>

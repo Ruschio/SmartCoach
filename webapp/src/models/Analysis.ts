@@ -8,6 +8,6 @@ export interface IAnalysisResults {
   timestamp: number
   contractId: string
   results: {
-    [tool: string]: Object
+    [tool: string]: any
   }
 }

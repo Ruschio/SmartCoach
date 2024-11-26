@@ -67,7 +67,13 @@ const parseTransaction = (tx: IMyTransaction) =>
   padding: 1rem 2rem;
   border-radius: 0.5rem;
   color: var(--color-text);
-  background-color: var(--color-background-mute);
+  background-color: var(--color-background-soft);
+  transition: 0.2s ease-in-out;
   overflow: hidden;
+}
+
+#transactionList .transaction:hover {
+  background-color: var(--color-background-mute);
+  transform: scale(1.02);
 }
 </style>

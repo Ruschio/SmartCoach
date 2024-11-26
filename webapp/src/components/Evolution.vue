@@ -7,6 +7,7 @@ import { MyContract } from '@/models/MyContract'
 import { type ICompileResults } from '@/models/Compile'
 import { useContractStore } from '@/stores/contract'
 import { Contract, FunctionFragment, ParamType, Interface } from 'ethers'
+import { toast } from 'vue3-toastify'
 import { computed, ref, watch } from 'vue'
 
 // Properties
@@ -38,11 +39,12 @@ const proxyFunctions = computed(() =>
   )
 )
 const selectedFunction = ref<FunctionFragment>()
-const functionInputs = computed(() => Array(selectedFunction.value?.inputs.length))
+const functionInputs = ref<Array<any>>(Array(0))
 const updatedCode = computed(() => getContractUpdate(props.contract.getId()))
 const compiled = ref<ICompileResults | null>(null)
 const contractConstructor = computed(() => compiled.value ? new Interface(JSON.stringify(compiled.value.abi)).deploy : null)
 const constructorInputs = computed(() => Array(contractConstructor.value?.inputs.length))
+const deployMessage = ref<string>()
 
 // Methods
 const addProxy = async ({ address, network }: { address: string; network: string }) => {
@@ -61,7 +63,16 @@ const getInputType = (input: ParamType): 'number' | 'boolean' | 'text' => {
 const deploy = async (network: string) => {
   if (!compiled.value) return
   deployLoading.value = true
-  deployContract(JSON.stringify(compiled.value.abi), compiled.value.bytecode, [], network)
+  try {
+    const contract = await deployContract(JSON.stringify(compiled.value.abi), compiled.value.bytecode, [], network)
+    await contract.deploymentTransaction()?.wait(2)
+    const address = await contract.getAddress()
+    deployMessage.value = 'Contract deployed with address ' + address
+    toast.success('Contract deployed successfully')
+  } catch (error) {
+    deployMessage.value = undefined
+    toast.error('Error while deploying the contract')
+  }
   deployLoading.value = false
 }
 
@@ -71,9 +82,14 @@ watch(
   async (code) => {
     compileLoading.value = true
     compiled.value = code ? await compileContract(code) : null
+    deployMessage.value = undefined
     compileLoading.value = false
   },
   { immediate: true }
+)
+watch(
+  () => selectedFunction.value,
+  () => functionInputs.value = new Array(selectedFunction.value?.inputs.length)
 )
 </script>
 
@@ -87,7 +103,7 @@ watch(
           <!-- <button class="btn btn-primary" @click="connectWallet()">Connect Wallet</button> -->
         </template>
         <template v-else>
-          <h5 class="proxy">
+          <h5 class="proxy mb-1">
             Proxy contract
             <button
               class="btn btn-sm btn-outline-secondary"
@@ -115,7 +131,7 @@ watch(
             </select>
             <form
               v-if="selectedFunction"
-              class="row mb-2 function"
+              class="row function"
               @submit.prevent="callFunction(proxyContract, selectedFunction.name, functionInputs)"
             >
               <div v-if="selectedFunction.inputs.length == 0">No input parameters</div>
@@ -130,6 +146,22 @@ watch(
                   <option :value="true">true</option>
                   <option :value="false">false</option>
                 </select>
+                <div class="input-group" v-else-if="input.type.startsWith('bytes')">
+                  <input
+                    class="form-control form-control-sm"
+                    :type="getInputType(input)"
+                    :placeholder="input.type"
+                    v-model="functionInputs[index]"
+                    required
+                  />
+                  <button 
+                    type="button"
+                    class="btn btn-primary btn-sm"
+                    @click="functionInputs[index] = '0x' + compiled?.bytecode"
+                  >
+                    <i class="bi bi-copy"></i>
+                  </button>
+                </div>
                 <input
                   v-else
                   class="form-control form-control-sm"
@@ -218,19 +250,17 @@ watch(
             />
           </div>
         </div>
-        <div v-else>You are ready for deploy!</div>
+        <div v-else>{{ deployMessage || 'You are ready for deploy!' }}</div>
         <div class="btn-group mt-4">
           <button
             type="button"
             class="btn btn-primary dropdown-toggle px-3 px-lg-4 rounded-3"
-            :disabled="compiled ? false : true"
+            :disabled="!compiled"
             data-bs-toggle="dropdown"
             aria-expanded="false"
           >
-            <div class="spinner" v-if="deployLoading">
-              <span class="spinner-border spinner-border-sm me-1" aria-hidden="true"></span>
-            </div>
-            <span class="me-1">Deploy</span>
+            <span v-if="deployLoading" class="spinner-border spinner-border-sm me-2" aria-hidden="true"></span>
+            <span class="me-1">{{ deployLoading ? 'Deploying' : 'Deploy' }}</span>
           </button>
           <ul class="dropdown-menu dropdown-menu-end">
             <li v-for="[net, info] in MyEtherscanProvider.supportedNetworks">
@@ -245,7 +275,7 @@ watch(
 
 <style scoped>
 .deploy {
-  padding: 1.5rem 2rem;
+  padding: 1.5rem 2rem 2rem 2rem;
   border-radius: 1rem;
   background-color: var(--color-background-soft);
   transition: background-color 0.5s;

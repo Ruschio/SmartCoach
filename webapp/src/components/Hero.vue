@@ -13,8 +13,8 @@ const props = defineProps<propsInterface>()
     </h1>
     <h2 class="mb-4">Helping developers with smart contract evolution</h2>
     <h3 class="d-none d-lg-block">
-      This Digital Twin-based framework can help you to monitor, analyze, update, and evolve Smart
-      Contracts, just like a coach
+      This Digital Twin-based framework can help you to monitor, analyze, update, and evolve smart
+      contracts, just like a coach.
     </h3>
   </div>
 </template>

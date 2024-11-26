@@ -1,12 +1,12 @@
 <script setup lang="ts">
 import { readFile } from '@/utils/files'
 import { type MyContract } from '@/models/MyContract'
-import { analyzeContract, compileContract } from '@/services/contractService'
+import { analyzeContract } from '@/services/contractService'
 import { useContractStore } from '@/stores/contract'
 import { DiffEditor } from '@guolao/vue-monaco-editor'
 import * as monacoEditor from 'monaco-editor/esm/vs/editor/editor.api'
 import { toast } from 'vue3-toastify'
-import { computed, ref, toRef, watch } from 'vue'
+import { computed, ref } from 'vue'
 
 // Properties
 interface propsInterface {
@@ -28,7 +28,8 @@ const tools = ref<Array<string>>([
   'sfuzz',
   'slither',
   'smartcheck',
-  'solhint'
+  'solhint',
+  'sumo'
 ])
 const selectedTools = ref<Array<string>>([])
 const allSelected = computed(() => tools.value.length == selectedTools.value.length)
@@ -76,9 +77,7 @@ const updateCode = (editor: monacoEditor.editor.IStandaloneDiffEditor) => {
         language="sol"
         theme="vs-dark"
         :original="contract.code || '// No available code for this contract'"
-        :modified="
-          getContractUpdate(props.contract.getId()) || '// Paste or upload the updated source code'
-        "
+        :modified="codeEvolved || '// Paste or upload the updated source code'"
         :onMount="updateCode"
       />
     </div>

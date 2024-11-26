@@ -35,7 +35,7 @@ const filterContracts = computed(() =>
 
 <template>
   <div id="contractList">
-    <div v-if="getContracts.size == 0" class="contract">Add at least one contract</div>
+    <div v-if="getContracts.size == 0" class="contract">Add your first contract!</div>
     <div v-else-if="filterContracts.length == 0" class="contract">
       No contract matches your search
     </div>
@@ -90,19 +90,19 @@ const filterContracts = computed(() =>
 #contractList .contract {
   padding: 1.5rem 2rem;
   border-radius: 0.5rem;
-  background-color: var(--color-background-mute);
+  background-color: var(--color-background-soft);
   transition: 0.2s ease-in-out;
   display: flex;
   justify-content: space-between;
 }
 
 #contractList .contract:hover {
+  background-color: var(--color-background-mute);
   transform: scale(1.03);
 }
 
 #contractList .contract .info {
   color: var(--color-text);
-  background-color: var(--color-background-mute);
   overflow: hidden;
 }
 
