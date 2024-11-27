@@ -7,4 +7,4 @@ BIN="$3"
 export PATH="$BIN:$PATH"
 chmod +x "$BIN/solc"
 
-slither "$FILENAME" --json /output.json
+slither "$FILENAME" --json /output.json --solc-args="--via-ir"

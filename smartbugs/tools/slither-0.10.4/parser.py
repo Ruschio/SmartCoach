@@ -151,6 +151,9 @@ def parse(exit_code, log, output):
                     finding["line_end"] = lines[-1]
             finding["filename"] = source_mapping["filename_absolute"].replace("/sb/","")
         for element in elements:
+            if element.get("source_mapping"):
+                finding["column"] = element["source_mapping"]["starting_column"]
+                finding["column_end"] = element["source_mapping"]["ending_column"]
             if element.get("type") == "function":
                 finding["function"] = element["name"]
                 type_specific_fields = element.get("type_specific_fields", {})
