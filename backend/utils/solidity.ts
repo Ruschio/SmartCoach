@@ -36,7 +36,7 @@ const parseVersion = (versionString: string): number[] => {
 // Compare two solidity versions and returns:
 //  = 0 if are equal
 //  > 0 if v1 is greater than v2
-//  < 0 if v2 is greater than v2
+//  < 0 if v2 is greater than v1
 const compareVersions = (v1: number[], v2: number[]): number => {
     if (v1.length != v2.length) return v1.length - v2.length
     let equal = 0
